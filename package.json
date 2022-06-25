@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/deepakkarki/dk-sdk/issues"
   },
-  "homepage": "https://github.com/deepakkarki/dk-sdk#readme"
+  "homepage": "https://github.com/deepakkarki/dk-sdk#readme",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
 }
