@@ -1,0 +1,19 @@
+{
+  "name": "dk-sdk",
+  "version": "1.0.0",
+  "description": "SDK for the Lord of the Rings API (https://the-one-api.dev)",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepakkarki/dk-sdk.git"
+  },
+  "author": "Deepak Karki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deepakkarki/dk-sdk/issues"
+  },
+  "homepage": "https://github.com/deepakkarki/dk-sdk#readme"
+}
