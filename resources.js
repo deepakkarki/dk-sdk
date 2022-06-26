@@ -1,3 +1,5 @@
+const { processSort, processFilter } = require('./api')
+
 class Cursor{
   constructor(limit){
     this.page = 1;
@@ -20,16 +22,18 @@ class Book{
     this.name = name;
   }
 
-  getChapters(){
+  getChapters({limit=100, filter={}, sort={}}){
+    filter = processFilter(filter);
+    sort = processSort(sort);
     const url = `/book/${this.id}/chapter`;
     const cur = new Cursor(limit);
     const api = this.#handle;
-    const next = function(params){
+    cur._next = function(params){
+      params = {...filter, ...sort, ...params}
       return api.get(url, {params}).then(res =>
         res.docs.map(ch => new Chapter(api, ch._id, ch.chapterName))
       );
     }
-    cur._next = next;
     return cur;
   }
 }
