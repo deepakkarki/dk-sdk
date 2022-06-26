@@ -22,33 +22,83 @@ class Book{
     this.name = name;
   }
 
-  getChapters({limit=100, filter={}, sort={}}){
-    filter = processFilter(filter);
-    sort = processSort(sort);
+  getChapters(args){
     const url = `/book/${this.id}/chapter`;
-    const cur = new Cursor(limit);
-    const api = this.#handle;
-    cur._next = function(params){
-      params = {...filter, ...sort, ...params}
-      return api.get(url, {params}).then(res =>
-        res.docs.map(ch => new Chapter(api, ch._id, ch.chapterName))
-      );
-    }
-    return cur;
+    return this.#handle._cursorCall(url, oCreator('chapter'), args);
   }
 }
 
 class Chapter{
   #handle;
-  constructor(handle, id, name){
+  constructor(handle, id, name, book){
     this.#handle = handle;
     this.id = id;
     this.name = name;
+    this.book = book;
   }
+}
+
+class Movie{
+  #handle;
+
+  constructor(handle, id, name, runtime=0, budget=0, nominations=0, wins=0, rts=0){
+    this.#handle = handle;
+    this.id = id;
+    this.name = name;
+    this.runtime = runtime;
+    this.budget = budget;
+    this.nominations = nominations;
+    this.wins = wins;
+    this.rts = rts;
+  }
+
+  getQuotes(args){
+    const url = `/movie/${this.id}/quote`;
+    return this.#handle._cursorCall(url, oCreator('quote'), args);
+  }
+}
+
+class Quote{
+  #handle;
+  constructor(handle, id, dialog, movie, character){
+    this.#handle = handle;
+    this.id = id;
+    this.dialog = dialog;
+    this.movie = movie;
+    this.character = character;
+  }
+}
+
+function oCreator(type){
+  let omap = {
+    book : (args) => {
+      let {handle, _id, name} = args;
+      return new Book(handle, _id, name);
+    },
+    chapter: (args) => {
+      let {handle, _id, chapterName, book} = args;
+      return new Chapter(handle, _id, chapterName, book);
+    },
+    movie: (args) => {
+      let { handle, _id, name, runtimeInMinutes:runtime, budgetInMillions:budget,
+            academyAwardNominations:nominations, academyAwardWins:wins, 
+            rottenTomatoesScore:rts 
+          } = args;
+      return new Movie(handle, _id, name, runtime, budget, nominations, wins, rts);
+    },
+    quote: (args) => {
+      let {handle, _id, dialog, movie, character} = args;
+      return new Quote(handle, _id, dialog, movie, character);
+    }
+  }
+
+  return omap[type];
 }
 
 module.exports = {
   Book,
   Chapter,
-  Cursor
+  Cursor,
+  Movie,
+  oCreator
 }
