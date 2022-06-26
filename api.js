@@ -19,8 +19,8 @@ function API(token){
 }
 
 function handleError(err){
-  console.log("Error", e);
-  throw e;
+  console.log("Error", err);
+  throw err;
 }
 
 module.exports = {
