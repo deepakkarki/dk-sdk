@@ -1,8 +1,10 @@
 const { API, processSort, processFilter } = require('./api');
-const { Book, Chapter, Cursor, Movie, oCreator } = require('./resources');
+const { Cursor, oCreator } = require('./resources');
 
 class OneAPI{
   constructor(key, settings){
+    // settings to be passed to API to configure 
+    // axios for retries, caching, timeout, etc.
     this.api = API(key);
   }
 
@@ -52,6 +54,30 @@ class OneAPI{
 
   getMovieById(id){
     return this._resourceCall('movie', id)
+  }
+
+  getMovieQuotes(id, args){
+    return this._cursorCall(`/movie/${id}/quote`, oCreator('quote'), args)
+  }
+
+  getQuotes(args){
+    return this._cursorCall('/quote', oCreator('quote'), args)
+  }
+
+  getQuoteById(id){
+    return this._resourceCall('quote', id)
+  }
+
+  getCharacters(args){
+    return this._cursorCall('/character', oCreator('character'), args)
+  }
+
+  getCharacterById(id){
+    return this._resourceCall('character', id)
+  }
+
+  getCharacterQuotes(id, args){
+    return this._cursorCall(`/movie/${id}/quote`, oCreator('quote'), args)
   }
 }
 

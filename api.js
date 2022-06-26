@@ -6,10 +6,7 @@ function API(token){
   let api = {
     get: (resource, opts={}) => {
       return axios.get(resource, {...defaultOpts, ...opts})
-                  .then(res => {
-                    console.log(res.request._header)
-                    return res.data
-                  })
+                  .then(res => res.data)
                   .catch(err => handleError(err))
     }
     // repeat for other methods if required; other option is to use a Proxy to wrap Axios

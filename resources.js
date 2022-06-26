@@ -30,7 +30,7 @@ class Book{
 
 class Chapter{
   #handle;
-  constructor(handle, id, name, book){
+  constructor(handle, id, name, book=""){
     this.#handle = handle;
     this.id = id;
     this.name = name;
@@ -60,12 +60,30 @@ class Movie{
 
 class Quote{
   #handle;
-  constructor(handle, id, dialog, movie, character){
+  constructor(handle, id, dialog="", movie="", character=""){
     this.#handle = handle;
     this.id = id;
     this.dialog = dialog;
     this.movie = movie;
     this.character = character;
+  }
+}
+
+class Character{
+  #handle;
+
+  constructor(handle, id, name='', race='', gender='', death=''){
+    this.#handle = handle;
+    this.id = id;
+    this.name = name;
+    this.race = race;
+    this.gender = gender;
+    this.death = death;
+  }
+
+  getQuotes(args){
+    const url = `/character/${this.id}/quote`;
+    return this.#handle._cursorCall(url, oCreator('quote'), args);
   }
 }
 
@@ -89,6 +107,10 @@ function oCreator(type){
     quote: (args) => {
       let {handle, _id, dialog, movie, character} = args;
       return new Quote(handle, _id, dialog, movie, character);
+    },
+    character: (args) => {
+      let {handle, _id, name, race, gender, death} = args;
+      return new Character(handle, _id, name, race, gender, death);
     }
   }
 
@@ -100,5 +122,6 @@ module.exports = {
   Chapter,
   Cursor,
   Movie,
+  Character,
   oCreator
 }
